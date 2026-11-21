@@ -7,6 +7,10 @@ instead of Microsoft SAPI.
 
 Requires tSIP 0.4+ and Windows 8.1+ or Wine.
 
+![TTS](http://tomeko.net/software/SIPclient/TTS_sherpa_onnx/tts_on_the_button.png) 
+
+![TTS_settings](http://tomeko.net/software/SIPclient/TTS_sherpa_onnx/tts_settings.png) 
+
 ## Installation
 
 See [INSTALL.md](INSTALL.md) - in short: copy `TTS_sherpa_onnx.dll` and `_dist\phone` contents to tSIP
