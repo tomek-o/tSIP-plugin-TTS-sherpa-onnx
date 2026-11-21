@@ -1,0 +1,77 @@
+@echo off
+rem Build tSIP text-to-speech plugin (TTS_sherpa_onnx.dll) using Makefile
+rem
+rem Usage: build.bat [release|debug|clean|test]
+rem   default: release -> bin\Release\TTS_sherpa_onnx.dll
+rem   test: also test programs (tts_test.exe, download_test.exe, TestHost.exe)
+rem
+rem MinGW location can be overridden with MINGW_BIN environment variable,
+rem default: Code::Blocks 25.03 bundled MinGW (GCC 14.2, 32-bit).
+rem
+rem Built DLL is copied (by Makefile, copy_to_tsip.bat) to both tSIP
+rem Debug_Build\phone and Release_Build\phone together with _dist\phone contents;
+rem tSIP application directory can be overridden with TSIP_DIR environment
+rem variable, default: ..\tSIP\tSIP (relative to this script).
+
+setlocal
+
+if "%MINGW_BIN%"=="" set MINGW_BIN=G:\zrzut\codeblocks-25.03mingw-32bit-nosetup\MinGW\bin
+if "%TSIP_DIR%"=="" set TSIP_DIR=%~dp0..\tSIP\tSIP
+
+if not exist "%MINGW_BIN%\mingw32-make.exe" (
+	echo ERROR: mingw32-make.exe not found in "%MINGW_BIN%"
+	echo Set MINGW_BIN to MinGW bin directory.
+	exit /b 1
+)
+
+set PATH=%MINGW_BIN%;%PATH%
+cd /d "%~dp0"
+
+set CONFIG=%1
+if "%CONFIG%"=="" set CONFIG=release
+
+if /i "%CONFIG%"=="clean" (
+	mingw32-make clean
+	exit /b %errorlevel%
+)
+if /i "%CONFIG%"=="test" (
+	mingw32-make all test testhost
+	exit /b %errorlevel%
+)
+if /i "%CONFIG%"=="release" (
+	set OUTDIR=bin\Release
+) else if /i "%CONFIG%"=="debug" (
+	set OUTDIR=bin\Debug
+) else (
+	echo ERROR: unknown configuration "%CONFIG%", use release, debug, test or clean
+	exit /b 1
+)
+
+echo Building %CONFIG% ...
+mingw32-make CONFIG=%CONFIG%
+if errorlevel 1 (
+	echo ERROR: build failed
+	exit /b 1
+)
+
+echo.
+echo Exports (tSipPluginInit expected without decoration):
+objdump -p %OUTDIR%\TTS_sherpa_onnx.dll | findstr /r /c:"tSipPluginInit"
+if errorlevel 1 (
+	echo ERROR: tSipPluginInit export not found
+	exit /b 1
+)
+
+echo.
+echo Imported DLLs (no MinGW runtime DLLs expected):
+objdump -p %OUTDIR%\TTS_sherpa_onnx.dll | findstr /c:"DLL Name"
+objdump -p %OUTDIR%\TTS_sherpa_onnx.dll | findstr /i /c:"libstdc++" /c:"libgcc_s" /c:"libwinpthread" >nul
+if not errorlevel 1 (
+	echo ERROR: depends on MinGW runtime DLL - check static linking
+	exit /b 1
+)
+
+echo.
+echo OK: %OUTDIR%\TTS_sherpa_onnx.dll
+echo Enable plugin in tSIP Settings / Plugins (if not enabled yet).
+exit /b 0

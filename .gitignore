@@ -1,0 +1,12 @@
+bin/
+obj/
+*.cfg
+# Code::Blocks user files
+*.depend
+*.layout
+# voices downloaded / copied for testing (large)
+_dist/phone/TTS_sherpa_onnx/vits-*/
+_dist/phone/TTS_sherpa_onnx/kokoro-*/
+_dist/phone/TTS_sherpa_onnx/kitten-*/
+*.part
+doc_extra/

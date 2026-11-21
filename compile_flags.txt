@@ -1,0 +1,10 @@
+--target=i686-w64-mingw32
+-std=c++17
+-DUNICODE
+-D_UNICODE
+-DWIN32_LEAN_AND_MEAN
+-D_WIN32_WINNT=0x0601
+-Ithird_party/jsoncpp/include
+-Ithird_party/sherpa-onnx
+-Ithird_party/bzip2
+-I../tSIP/tSIP/phone

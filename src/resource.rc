@@ -1,0 +1,126 @@
+#include <windows.h>
+#include "resource.h"
+#include "version.h"
+
+IDI_PLUGIN ICON "../resources/tSIP.ico"
+
+IDD_SETTINGS DIALOGEX 0, 0, 400, 318
+STYLE DS_MODALFRAME | DS_SETFONT | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Text-to-speech (sherpa-onnx) settings"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    GROUPBOX        "General", -1, 7, 4, 386, 78
+    AUTOCHECKBOX    "Always on top (separate window)", IDC_ALWAYS_ON_TOP, 14, 16, 180, 10
+    LTEXT           "Embed in tSIP button with ID (0: no):", -1, 200, 17, 145, 9
+    EDITTEXT        IDC_EMBED_BUTTON_ID, 348, 15, 37, 12, ES_NUMBER | ES_AUTOHSCROLL
+    AUTOCHECKBOX    "[Enter] to send message (Shift+Enter: new line)", IDC_SEND_ON_ENTER, 14, 28, 180, 10
+    LTEXT           "Threads used for speech generation:", -1, 200, 29, 145, 9
+    EDITTEXT        IDC_NUM_THREADS, 348, 27, 37, 12, ES_NUMBER | ES_AUTOHSCROLL
+    AUTOCHECKBOX    "Silence instead of microphone during calls", IDC_SILENCE_MIC, 14, 40, 180, 10
+    AUTOCHECKBOX    "Show voice name in log", IDC_SHOW_VOICE, 200, 40, 185, 10
+    LTEXT           "sherpa-onnx library dir:", -1, 14, 56, 84, 9
+    EDITTEXT        IDC_LIBRARY_DIR, 100, 54, 266, 12, ES_AUTOHSCROLL
+    PUSHBUTTON      "...", IDC_LIBRARY_DIR_BROWSE, 369, 54, 16, 12
+    LTEXT           "", IDC_BASE_DIR_INFO, 14, 68, 372, 10, SS_PATHELLIPSIS | SS_NOPREFIX
+
+    GROUPBOX        "Voices", -1, 7, 84, 386, 208
+    LISTBOX         IDC_VOICE_LIST, 14, 96, 100, 152, LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_BORDER | WS_TABSTOP
+    PUSHBUTTON      "Download voices...", IDC_VOICE_DOWNLOAD, 14, 252, 100, 14
+    PUSHBUTTON      "Add", IDC_VOICE_ADD, 14, 270, 48, 14
+    PUSHBUTTON      "Remove", IDC_VOICE_REMOVE, 66, 270, 48, 14
+
+    LTEXT           "Name:", -1, 122, 98, 60, 9
+    EDITTEXT        IDC_VOICE_NAME, 184, 96, 201, 12, ES_AUTOHSCROLL
+    LTEXT           "Model type:", -1, 122, 114, 60, 9
+    COMBOBOX        IDC_VOICE_TYPE, 184, 112, 70, 60, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Fill from model directory...", IDC_VOICE_FILL, 268, 111, 117, 14
+    LTEXT           "Model (.onnx):", -1, 122, 130, 60, 9
+    EDITTEXT        IDC_VOICE_MODEL, 184, 128, 182, 12, ES_AUTOHSCROLL
+    PUSHBUTTON      "...", IDC_VOICE_MODEL_BROWSE, 369, 128, 16, 12
+    LTEXT           "Tokens:", -1, 122, 146, 60, 9
+    EDITTEXT        IDC_VOICE_TOKENS, 184, 144, 182, 12, ES_AUTOHSCROLL
+    PUSHBUTTON      "...", IDC_VOICE_TOKENS_BROWSE, 369, 144, 16, 12
+    LTEXT           "espeak-ng data:", -1, 122, 162, 60, 9
+    EDITTEXT        IDC_VOICE_DATA_DIR, 184, 160, 182, 12, ES_AUTOHSCROLL
+    PUSHBUTTON      "...", IDC_VOICE_DATA_DIR_BROWSE, 369, 160, 16, 12
+    LTEXT           "Lexicon (optional):", -1, 122, 178, 62, 9
+    EDITTEXT        IDC_VOICE_LEXICON, 184, 176, 182, 12, ES_AUTOHSCROLL
+    PUSHBUTTON      "...", IDC_VOICE_LEXICON_BROWSE, 369, 176, 16, 12
+    LTEXT           "Voices file:", -1, 122, 194, 60, 9
+    EDITTEXT        IDC_VOICE_VOICES, 184, 192, 182, 12, ES_AUTOHSCROLL
+    PUSHBUTTON      "...", IDC_VOICE_VOICES_BROWSE, 369, 192, 16, 12
+    LTEXT           "Language:", -1, 122, 210, 60, 9
+    EDITTEXT        IDC_VOICE_LANG, 184, 208, 50, 12, ES_AUTOHSCROLL
+    LTEXT           "(Kokoro only, e.g. en-us)", -1, 240, 210, 140, 9
+    LTEXT           "Speaker ID:", -1, 122, 226, 60, 9
+    EDITTEXT        IDC_VOICE_SPEAKER, 184, 224, 50, 12, ES_NUMBER | ES_AUTOHSCROLL
+    LTEXT           "Speed:", -1, 250, 226, 30, 9
+    EDITTEXT        IDC_VOICE_SPEED, 282, 224, 40, 12, ES_AUTOHSCROLL
+    LTEXT           "Voices file: Kokoro / Kitten models only. Speed: 1.0 = normal, 1.2 = 20% faster. Relative paths are resolved against the plugin data directory (shown above).", -1, 122, 244, 264, 26
+
+    DEFPUSHBUTTON   "OK", IDOK, 287, 298, 50, 14
+    PUSHBUTTON      "Cancel", IDCANCEL, 343, 298, 50, 14
+END
+
+IDD_DOWNLOAD DIALOGEX 0, 0, 330, 250
+STYLE DS_MODALFRAME | DS_SETFONT | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Download voices"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Voices published by sherpa-onnx project (GitHub: k2-fsa/sherpa-onnx, release ""tts-models""). Full models (60-110 MB) are recommended; int8 variants are smaller (about 20 MB) but may be several times slower (slower than real time on older CPUs). Check license of the voice (MODEL_CARD file in voice directory).", -1, 7, 6, 316, 27
+    LTEXT           "Filter:", -1, 7, 39, 24, 9
+    EDITTEXT        IDC_DL_FILTER, 34, 37, 110, 12, ES_AUTOHSCROLL
+    AUTOCHECKBOX    "int8 only", IDC_DL_INT8, 152, 38, 60, 10
+    PUSHBUTTON      "Refresh list", IDC_DL_REFRESH, 263, 36, 60, 14
+    LISTBOX         IDC_DL_LIST, 7, 54, 316, 130, LBS_NOTIFY | LBS_EXTENDEDSEL | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_BORDER | WS_TABSTOP
+    LTEXT           "", IDC_DL_STATUS, 7, 189, 316, 9, SS_ENDELLIPSIS | SS_NOPREFIX
+    CONTROL         "", IDC_DL_PROGRESS, "msctls_progress32", 0, 7, 201, 316, 10
+    LTEXT           "Without internet access: copy voice directory (extracted archive) to plugin data directory and use ""Fill from model directory"", or install archive (.tar.bz2) with ""Install from file"".", -1, 7, 214, 316, 17
+    PUSHBUTTON      "Install from file...", IDC_DL_FROM_FILE, 7, 232, 80, 14
+    DEFPUSHBUTTON   "Download selected", IDC_DL_START, 175, 232, 80, 14
+    PUSHBUTTON      "Close", IDCANCEL, 263, 232, 60, 14
+END
+
+IDD_QUICK_TEXT DIALOGEX 0, 0, 260, 150
+STYLE DS_MODALFRAME | DS_SETFONT | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Quick text button"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Caption:", -1, 7, 9, 40, 9
+    EDITTEXT        IDC_QT_CAPTION, 50, 7, 203, 12, ES_AUTOHSCROLL
+    LTEXT           "(empty: beginning of the text)", -1, 50, 21, 203, 9
+    LTEXT           "Text:", -1, 7, 35, 40, 9
+    EDITTEXT        IDC_QT_TEXT, 50, 33, 203, 60, ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_VSCROLL
+    LTEXT           "Voice:", -1, 7, 101, 40, 9
+    COMBOBOX        IDC_QT_VOICE, 50, 99, 203, 100, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "OK", IDOK, 147, 129, 50, 14
+    PUSHBUTTON      "Cancel", IDCANCEL, 203, 129, 50, 14
+END
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR, PLUGIN_VERSION_RELEASE, PLUGIN_VERSION_BUILD
+PRODUCTVERSION PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR, PLUGIN_VERSION_RELEASE, PLUGIN_VERSION_BUILD
+FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+FILEFLAGS 0
+FILEOS VOS__WINDOWS32
+FILETYPE VFT_DLL
+FILESUBTYPE 0
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "FileDescription", "tSIP text-to-speech plugin (sherpa-onnx)"
+            VALUE "FileVersion", PLUGIN_VERSION
+            VALUE "InternalName", "TTS_sherpa_onnx"
+            VALUE "OriginalFilename", "TTS_sherpa_onnx.dll"
+            VALUE "ProductName", "tSIP text-to-speech plugin (sherpa-onnx)"
+            VALUE "ProductVersion", PLUGIN_VERSION
+            VALUE "Comments", "Typed text sent as call audio using offline neural voices (sherpa-onnx, Piper); www.tomeko.net"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 0x04B0
+    END
+END

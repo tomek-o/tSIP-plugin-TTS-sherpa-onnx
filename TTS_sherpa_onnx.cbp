@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="TTS_sherpa_onnx" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/TTS_sherpa_onnx" prefix_auto="0" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option host_application="../tSIP/tSIP/Debug_Build/tSIP.exe" />
+				<Option run_host_application_in_terminal="0" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/TTS_sherpa_onnx" prefix_auto="0" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option host_application="../tSIP/tSIP/Release_Build/tSIP.exe" />
+				<Option run_host_application_in_terminal="0" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Os" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++17" />
+			<Add option="-Wall" />
+			<Add option="-Wextra" />
+			<Add option="-DUNICODE" />
+			<Add option="-D_UNICODE" />
+			<Add option="-DWIN32_LEAN_AND_MEAN" />
+			<Add option="-D_WIN32_WINNT=0x0601" />
+			<Add directory="third_party/jsoncpp/include" />
+			<Add directory="third_party/sherpa-onnx" />
+			<Add directory="third_party/bzip2" />
+			<Add directory="../tSIP/tSIP/phone" />
+		</Compiler>
+		<ResourceCompiler>
+			<Add directory="src" />
+		</ResourceCompiler>
+		<ExtraCommands>
+			<Add after="cmd /c copy_to_tsip.bat $(TARGET_OUTPUT_FILE)" />
+			<Mode after="always" />
+		</ExtraCommands>
+		<Linker>
+			<Add option="-static" />
+			<Add option="-Wl,--add-stdcall-alias" />
+			<Add library="winhttp" />
+			<Add library="comctl32" />
+			<Add library="comdlg32" />
+			<Add library="shell32" />
+			<Add library="ole32" />
+			<Add library="winmm" />
+			<Add library="gdi32" />
+			<Add library="user32" />
+		</Linker>
+		<Unit filename="CHANGELOG.md" />
+		<Unit filename="INSTALL.md" />
+		<Unit filename="Makefile" />
+		<Unit filename="README.md" />
+		<Unit filename="THIRD_PARTY_NOTICES.md" />
+		<Unit filename="build.bat" />
+		<Unit filename="copy_to_tsip.bat" />
+		<Unit filename="src/DownloadDialog.cpp" />
+		<Unit filename="src/DownloadDialog.h" />
+		<Unit filename="src/Host.h" />
+		<Unit filename="src/Log.cpp" />
+		<Unit filename="src/Log.h" />
+		<Unit filename="src/Plugin.cpp" />
+		<Unit filename="src/Plugin.h" />
+		<Unit filename="src/Settings.cpp" />
+		<Unit filename="src/Settings.h" />
+		<Unit filename="src/SettingsDialog.cpp" />
+		<Unit filename="src/SettingsDialog.h" />
+		<Unit filename="src/T2S.cpp" />
+		<Unit filename="src/T2S.h" />
+		<Unit filename="src/TtsWorker.cpp" />
+		<Unit filename="src/TtsWorker.h" />
+		<Unit filename="src/Utils.cpp" />
+		<Unit filename="src/Utils.h" />
+		<Unit filename="src/VoiceDownload.cpp" />
+		<Unit filename="src/VoiceDownload.h" />
+		<Unit filename="src/QuickTextDialog.cpp" />
+		<Unit filename="src/QuickTextDialog.h" />
+		<Unit filename="src/Voices.cpp" />
+		<Unit filename="src/Voices.h" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/resource.h" />
+		<Unit filename="third_party/sherpa-onnx/c-api.h" />
+		<Unit filename="third_party/jsoncpp/src/lib_json/json_reader.cpp">
+			<Option compiler="gcc" use="1" buildCommand="$compiler $options -Wno-unused-parameter -Wno-implicit-fallthrough -Wno-deprecated-copy $includes -c $file -o $object" />
+		</Unit>
+		<Unit filename="third_party/jsoncpp/src/lib_json/json_value.cpp">
+			<Option compiler="gcc" use="1" buildCommand="$compiler $options -Wno-unused-parameter -Wno-implicit-fallthrough -Wno-deprecated-copy $includes -c $file -o $object" />
+		</Unit>
+		<Unit filename="third_party/jsoncpp/src/lib_json/json_writer.cpp">
+			<Option compiler="gcc" use="1" buildCommand="$compiler $options -Wno-unused-parameter -Wno-implicit-fallthrough -Wno-deprecated-copy $includes -c $file -o $object" />
+		</Unit>
+		<Unit filename="third_party/bzip2/blocksort.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler -Wall -O2 -c $file -o $object" />
+		</Unit>
+		<Unit filename="third_party/bzip2/bzlib.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler -Wall -O2 -c $file -o $object" />
+		</Unit>
+		<Unit filename="third_party/bzip2/compress.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler -Wall -O2 -c $file -o $object" />
+		</Unit>
+		<Unit filename="third_party/bzip2/crctable.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler -Wall -O2 -c $file -o $object" />
+		</Unit>
+		<Unit filename="third_party/bzip2/decompress.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler -Wall -O2 -c $file -o $object" />
+		</Unit>
+		<Unit filename="third_party/bzip2/huffman.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler -Wall -O2 -c $file -o $object" />
+		</Unit>
+		<Unit filename="third_party/bzip2/randtable.c">
+			<Option compilerVar="CC" />
+			<Option compiler="gcc" use="1" buildCommand="$compiler -Wall -O2 -c $file -o $object" />
+		</Unit>
+		<Unit filename="src/version.h" />
+		<Unit filename="src/resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="../tSIP/tSIP/phone/tSIP_plugin_v2.h" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
